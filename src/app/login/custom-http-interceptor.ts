@@ -1,4 +1,4 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
@@ -11,10 +11,11 @@ export class CustomHttpInterceptor implements HttpInterceptor {
     
 
         let obj = JSON.parse(this.localStore.getData('token') || '');
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${obj.credential}`);
 
         if (obj != null) {
             req = req.clone({
-                setHeaders: { 'Authorization': obj.value }
+                headers: headers 
             });
         }
         else {

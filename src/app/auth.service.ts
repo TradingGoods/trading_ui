@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { LocalService } from './local.service';
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
@@ -11,7 +12,7 @@ const httpOptions = {
 })
 export class AuthService {
   private url = 'http://localhost:8080/login/';
-  constructor(private http: HttpClient,public router: Router) {
+  constructor(private http: HttpClient,public router: Router, private localService: LocalService) {
   }
   login(data: any): Observable<any> {
       return this.http.post<any>(this.url, data, httpOptions).pipe(
@@ -26,12 +27,12 @@ export class AuthService {
   }
   private save_token(data: { success: any; token: string; }) {
       if (data.success) {
-          localStorage.setItem('token', data.token);
+          this.localService.saveData('token', data.token);
           return;
       }
   }
   canActivate(): boolean {
-    const token = localStorage.getItem('token');
+    const token =this.localService.getData('token');
         if (token == null)   {
             this.router.navigate(['login']);
             return false;

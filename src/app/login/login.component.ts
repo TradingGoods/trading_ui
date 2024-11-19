@@ -1,38 +1,28 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {Router, UrlTree} from '@angular/router';
 import {AuthService} from '../auth.service';
+import { GoogleApiService } from '../google-api.service';
 
 @Component({
   selector: 'login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements AfterViewInit {
 
-    // constructor(public authService: AuthService, public router: Router) {
-    // }
-    constructor() {}
+  constructor(private googleAuthService: GoogleApiService, private router: Router) {}
 
+  
 
-  data = {username: '', password: ''};
-
-    ngOnInit() {
-        console.log('Hi!');
-    }
-
-    // goTo(path: string | UrlTree): void {
-    //     this.router.navigateByUrl(path);
-    // }
-
-    // login(form: NgForm): void {
-    //     console.log("from login")
-    //     this.authService.login(form.value)
-    //         .subscribe(result => {
-    //             if (result.success) {
-    //                 this.goTo('home');
-    //             }
-    //         });
-    // }
-
+  ngAfterViewInit(): void {
+    this.googleAuthService.initializeAuth();
+    this.googleAuthService.authResponse$.subscribe(response => {
+      console.log('User Authenticated:', response);
+      if (response) {
+        // User is authenticated, navigate to home
+        this.googleAuthService.saveToken(response);
+      }
+    });
+  }
 }

@@ -8,26 +8,34 @@ import { CustomErrorsHandler } from './login/custom-error-handler';
 import { CustomHttpInterceptor } from './login/custom-http-interceptor';
 import { LoginComponent } from './login/login.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
+import { RouterModule } from '@angular/router';
+import { CreateAccountComponent } from './create-account/create-account.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginComponent,
+    CreateAccountComponent
   ],
   imports: [
     BrowserModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
     HttpClientModule,
-    OAuthModule.forRoot()
+    OAuthModule.forRoot(),
+    RouterModule.forRoot([])
   ],
   providers: [
-  //   {
-  //     provide: ErrorHandler,
-  //     useClass: CustomErrorsHandler
-  // },
-  // {
-  //     provide: HTTP_INTERCEPTORS,
-  //     useClass: CustomHttpInterceptor,
-  //     multi: true
-  // }
+    {
+      provide: ErrorHandler,
+      useClass: CustomErrorsHandler
+  },
+  {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CustomHttpInterceptor,
+      multi: true
+  }
   ],
   bootstrap: [AppComponent]
 })

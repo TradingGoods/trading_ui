@@ -1,28 +1,75 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {NgForm} from '@angular/forms';
+import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
 import {Router, UrlTree} from '@angular/router';
 import {AuthService} from '../auth.service';
-import { GoogleApiService } from '../google-api.service';
 
 @Component({
   selector: 'login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements AfterViewInit {
+export class LoginComponent implements AfterViewInit, OnInit {
 
-  constructor(private googleAuthService: GoogleApiService, private router: Router) {}
+  errorMessage: string = '';
+  successMessage: string = '';
 
-  
-
-  ngAfterViewInit(): void {
-    this.googleAuthService.initializeAuth();
-    this.googleAuthService.authResponse$.subscribe(response => {
-      console.log('User Authenticated:', response);
-      if (response) {
-        // User is authenticated, navigate to home
-        this.googleAuthService.saveToken(response);
-      }
+  constructor(
+    private router: Router,private fb: FormBuilder, private authService: AuthService) {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
     });
   }
+
+  ngOnInit(): void {}
+
+  loginForm: FormGroup;
+
+  ngAfterViewInit(): void {
+  }
+
+  onSubmit(): void {
+    if (this.loginForm.valid) {
+      const formData = this.loginForm.value;
+    //   console.log('Form Submitted', formData);
+    //   this.authService.login(formData).subscribe(
+    //     (response) => {
+    //       if(!!response) {
+    //       console.log('Login successful', response);
+    //       this.successMessage = 'Login successful';
+    //       this.errorMessage = '';
+    //       // Handle successful login here
+    //       this.router.navigate(['/home']);
+    //       }
+    //       else {
+    //         console.log('Login failed!');
+    //         this.errorMessage = 'Login failed. Please check your credentials.';
+    //         this.successMessage = '';
+    //         // Handle login error here
+    //       }
+    //     },
+    //     (error) => {
+    //       console.error('Login failed', error);
+    //       this.errorMessage = 'Login failed. Please check your credentials. Reason: ' + error;
+    //       this.successMessage = '';
+    //       // Handle login error here
+    //     }
+    //   );
+    //   // Add your login logic here
+    // } else {
+    //   console.log('Form is invalid');
+
+    this.authService.login(formData).subscribe({
+      next: (response) => {
+        console.log('Login success:', response); // Should show { token: '...' }
+        this.router.navigate(['/home']);
+      },
+      error: (error) => {
+        console.error('Login failed', error);
+        this.errorMessage = 'Login failed. Reason: ' + (error?.error?.message || error.message || 'Unknown');
+      }
+    });
+    }
+  }
+  
 }

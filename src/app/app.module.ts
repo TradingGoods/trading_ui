@@ -11,12 +11,14 @@ import { OAuthModule } from 'angular-oauth2-oidc';
 import { RouterModule } from '@angular/router';
 import { CreateAccountComponent } from './create-account/create-account.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    CreateAccountComponent
+    CreateAccountComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

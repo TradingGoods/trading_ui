@@ -15,7 +15,6 @@ const httpOptions = {
 
 export class AuthService {
     isLoggedIn = false;
-    private url = 'http://trading-backend:8080/api/auth/login';
   
     constructor(private http: HttpClient, public router: Router, private localService: LocalService) {
       // You might want to check for an existing token on service initialization

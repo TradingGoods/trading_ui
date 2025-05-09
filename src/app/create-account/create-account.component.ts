@@ -75,8 +75,8 @@ export class CreateAccountComponent implements OnInit{
       const formData:any = {};
       formData.firstName = this.createAccountForm.controls['firstName'].value;
       formData.lastName = this.createAccountForm.controls['lastName'].value;
-      formData.email = this.createAccountForm.controls['email'].value;
-      formData.phone = this.createAccountForm.controls['phone'].value;
+      formData.emailId = this.createAccountForm.controls['email'].value;
+      formData.phoneNumber = this.createAccountForm.controls['phone'].value;
       formData.password = this.createAccountForm.controls['password'].value;
       formData.profile_pic_url = this.receivedData?.picture;
       console.log('Account Created:', formData);

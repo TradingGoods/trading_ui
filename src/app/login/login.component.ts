@@ -31,45 +31,29 @@ export class LoginComponent implements AfterViewInit, OnInit {
   onSubmit(): void {
     if (this.loginForm.valid) {
       const formData = this.loginForm.value;
-    //   console.log('Form Submitted', formData);
-    //   this.authService.login(formData).subscribe(
-    //     (response) => {
-    //       if(!!response) {
-    //       console.log('Login successful', response);
-    //       this.successMessage = 'Login successful';
-    //       this.errorMessage = '';
-    //       // Handle successful login here
-    //       this.router.navigate(['/home']);
-    //       }
-    //       else {
-    //         console.log('Login failed!');
-    //         this.errorMessage = 'Login failed. Please check your credentials.';
-    //         this.successMessage = '';
-    //         // Handle login error here
-    //       }
-    //     },
-    //     (error) => {
-    //       console.error('Login failed', error);
-    //       this.errorMessage = 'Login failed. Please check your credentials. Reason: ' + error;
-    //       this.successMessage = '';
-    //       // Handle login error here
-    //     }
-    //   );
-    //   // Add your login logic here
-    // } else {
-    //   console.log('Form is invalid');
-
-    this.authService.login(formData).subscribe({
-      next: (response) => {
-        console.log('Login success:', response); // Should show { token: '...' }
-        this.router.navigate(['/home']);
-      },
-      error: (error) => {
-        console.error('Login failed', error);
-        this.errorMessage = 'Login failed. Reason: ' + (error?.error?.message || error.message || 'Unknown');
-      }
-    });
-    }
+    
+      this.authService.login(formData).subscribe({
+        next: (response) => {
+          if(!!response) {
+          console.log('Login successful', response);
+          this.successMessage = 'Login successful';
+          this.errorMessage = '';
+          // Handle successful login here
+          this.router.navigate(['/home']);
+          }
+          else {
+            console.log('Login failed!');
+            this.errorMessage = 'Login failed. Please check your credentials.';
+            this.successMessage = '';
+          }
+        },
+        error: (error) => {
+          console.error('Login failed', error);
+          this.errorMessage = 'Login failed. Please check your credentials. Reason: ' + error;
+          this.successMessage = '';
+        }
+      });
+    } 
   }
   
 }

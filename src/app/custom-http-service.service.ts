@@ -19,7 +19,7 @@ export class CustomHttpService {
 
   // Generic POST request
   post<T>(endpoint: string, data: any): Observable<T> {
-    return this.http.post<T>(`${this.BASE_URL}/${endpoint}`, data, { withCredentials: true })
+    return this.http.post<T>(`${this.BASE_URL}/${endpoint}`, data)
       .pipe(catchError(this.handleError));
   }
 

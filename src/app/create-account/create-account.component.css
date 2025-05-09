@@ -57,4 +57,11 @@
     color: #e63946;
     font-size: 0.875rem;
   }
-  
+  .error-message {
+    color: red;
+    font-size: 0.875rem;
+  }
+  .login {
+    text-align: center;
+    padding-top: 25px;
+  }

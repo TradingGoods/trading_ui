@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, NgZone, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LocalService } from '../local.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,7 +16,7 @@ export class CreateAccountComponent implements OnInit{
 
 
 
-  constructor(private fb: FormBuilder, private localService: LocalService, private route: ActivatedRoute,private router: Router, private customHttpService: CustomHttpService, private ngZone: NgZone) {
+  constructor(private fb: FormBuilder, private localService: LocalService, private route: ActivatedRoute,private router: Router, private customHttpService: CustomHttpService) {
     this.createAccountForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -84,10 +84,11 @@ export class CreateAccountComponent implements OnInit{
       .pipe(
         tap((backendResponse: any) => {
           // Navigate to create account screen with backend response
-          this.ngZone.run(() => {
-            const encodedData = encodeURIComponent(JSON.stringify(backendResponse));
-            this.router.navigate(['/home'], { queryParams: { data: encodedData } });
-          });
+          // this.ngZone.run(() => {
+          //   const encodedData = encodeURIComponent(JSON.stringify(backendResponse));
+          //   this.router.navigate(['/home'], { queryParams: { data: encodedData } });
+          // });
+          this.router.navigate(['/login']);
         })
       ) 
       .subscribe({

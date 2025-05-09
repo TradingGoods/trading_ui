@@ -28,7 +28,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          file: ./Dockerfile # Assuming Dockerfile is directly in trading_ui
-          context: ./          # Context is trading_ui directory
+          file: /trading_ui/Dockerfile # Assuming Dockerfile is directly in trading_ui
+          context: ./trading_ui          # Context is trading_ui directory
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/trading-ui:latest
           # Add build-args if needed

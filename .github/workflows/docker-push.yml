@@ -31,4 +31,5 @@ jobs:
           file: /trading_ui/Dockerfile # Assuming Dockerfile is directly in trading_ui
           context: ./trading_ui          # Context is trading_ui directory
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/trading-ui:latest
+          no-cache: true
           # Add build-args if needed

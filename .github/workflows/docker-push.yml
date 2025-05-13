@@ -5,7 +5,7 @@ on:
     branches:
       - main # Or your UI's main branch
     paths:
-      - 'trading_ui/**' # Only trigger if changes in the trading_ui directory
+      - '**' # Only trigger if changes in the trading_ui directory
 
 jobs:
   build-and-push:

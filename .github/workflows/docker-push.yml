@@ -28,7 +28,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          file: trading_ui/Dockerfile
+          file: Dockerfile
           context: .
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/trading-ui:latest
           no-cache: true

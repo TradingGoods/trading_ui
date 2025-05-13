@@ -5,7 +5,7 @@ on:
     branches:
       - main # Or your UI's main branch
     paths:
-      - '**' # Only trigger if changes in the trading_ui directory
+      - 'trading_ui/**' # Only trigger if changes in the trading_ui directory
 
 jobs:
   build-and-push:
@@ -28,8 +28,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          file: /trading_ui/Dockerfile # Assuming Dockerfile is directly in trading_ui
-          context: ./trading_ui          # Context is trading_ui directory
+          file: trading_ui/Dockerfile
+          context: .
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/trading-ui:latest
           no-cache: true
-          # Add build-args if needed

@@ -83,18 +83,12 @@ export class CreateAccountComponent implements OnInit{
       this.customHttpService.post('api/auth/register',formData)
       .pipe(
         tap((backendResponse: any) => {
-          // Navigate to create account screen with backend response
-          // this.ngZone.run(() => {
-          //   const encodedData = encodeURIComponent(JSON.stringify(backendResponse));
-          //   this.router.navigate(['/home'], { queryParams: { data: encodedData } });
-          // });
           this.router.navigate(['/login']);
         })
       ) 
       .subscribe({
         error: (err) => {
           console.error('Error verifying token:', err);
-          // Handle error (e.g., navigate to error screen or show error message)
         }
       });
     }

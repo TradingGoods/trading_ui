@@ -10,18 +10,21 @@ import { LoginComponent } from './login/login.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { RouterModule } from '@angular/router';
 import { CreateAccountComponent } from './create-account/create-account.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
+import { DocumentManagementComponent } from './document-management/document-management.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     CreateAccountComponent,
-    HomeComponent
+    HomeComponent,
+    DocumentManagementComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,

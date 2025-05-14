@@ -9,22 +9,29 @@ export class CustomHttpInterceptor implements HttpInterceptor {
     constructor(private router: Router,private localStore: LocalService) { }
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     
-        const rawToken = this.localStore.getData('token');
+        const token = this.localStore.getData('authToken');
 
-        if (!rawToken) {
+        if (!token) {
             // Redirect only for protected routes
             if (!req.url.includes('/login')) {
             this.router.navigate(['/login']);
             }
-            return next.handle(req); // Let the request go through (or you can cancel it)
+            return next.handle(req);
         }
 
         try {
-            const obj = JSON.parse(rawToken);
-            const cloned = req.clone({
-            headers: req.headers.set('Authorization', `Bearer ${obj.credential}`),
-                    });
-            return next.handle(cloned);
+
+            const token = localStorage.getItem('authToken');
+
+            if (token) {
+                const authHeaders = req.headers.set('Authorization', `Bearer ${token}`);
+                const cloned = req.clone({
+                    headers: authHeaders,
+                });
+
+                return next.handle(cloned);
+            }
+            return next.handle(req);
         } catch (e) {
             console.error('Token parsing error:', e);
             this.router.navigate(['/login']);

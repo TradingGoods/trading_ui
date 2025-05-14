@@ -1,0 +1,130 @@
+
+<div class="p-4 md:p-8">
+  <h1 class="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-200">Document Management</h1>
+
+  <!-- Ingest Document -->
+  <div class="mb-8 border rounded p-4">
+    <h2 class="text-xl font-semibold mb-2">Ingest Document</h2>
+    <p class="text-sm mb-4">Upload a document to the system.</p>
+    <form [formGroup]="ingestForm" (ngSubmit)="handleIngestDocument()">
+      <div class="mb-4">
+        <input
+          type="file"
+          (change)="handleFileChange($event)"
+          accept=".pdf,.doc,.docx,.txt"
+          formControlName="file"
+          class="block mb-2"
+        />
+        <p *ngIf="ingestForm.get('file')?.touched && ingestForm.get('file')?.errors" class="text-red-500 text-sm">
+          Please select a file.
+        </p>
+        <div *ngIf="selectedFile" class="text-sm text-gray-600">
+          <span>Selected file: {{ selectedFile.name }}</span>
+          <button type="button" (click)="clearFile()" class="ml-2 text-red-500">Remove</button>
+        </div>
+      </div>
+      <div class="mb-4">
+        <label>Author</label>
+        <input type="text" placeholder="Enter author" formControlName="author" class="block mt-1 w-full" />
+      </div>
+      <button type="submit" [disabled]="loading" class="w-full bg-blue-500 text-white p-2 rounded">
+        {{ loading ? 'Uploading...' : 'Upload Document' }}
+      </button>
+      <div **ngIf="uploadSuccess" class="mt-2 text-green-500">
+        <small>Upload successful!</small>
+    </div>
+    </form>
+  </div>
+
+  <!-- Search Documents -->
+  <div class="mb-8 border rounded p-4">
+    <h2 class="text-xl font-semibold mb-2">Search Documents</h2>
+    <p class="text-sm mb-4">Search for documents by keyword.</p>
+    <div class="flex gap-4 mb-4">
+      <input
+        type="text"
+        placeholder="Enter search term..."
+        [(ngModel)]="searchTerm"
+        (keydown.enter)="handleSearch()"
+        class="flex-1 border p-1"
+      />
+      <button (click)="handleSearch()" [disabled]="loading" class="bg-blue-500 text-white px-4 py-1 rounded">
+        {{ loading ? 'Searching...' : 'Search' }}
+      </button>
+    </div>
+    <div *ngIf="documents.length > 0" class="text-sm text-gray-600 mb-4">
+      {{ totalElements }} documents found.
+    </div>
+  </div>
+
+  <!-- Document List -->
+  <div class="border rounded p-4">
+    <h2 class="text-xl font-semibold mb-2">Document List</h2>
+    <p class="text-sm mb-4">Filter and view documents.</p>
+    <div class="flex flex-wrap gap-4 mb-4">
+      <input type="text" placeholder="Filter by Author" [(ngModel)]="authorFilter" class="border p-1" />
+      <input type="text" placeholder="Filter by File Type" [(ngModel)]="fileTypeFilter" class="border p-1" />
+      <button (click)="clearFilters()" class="border px-4 py-1">Clear Filters</button>
+    </div>
+
+    <table *ngIf="documents.length > 0" class="w-full border mb-4">
+      <thead>
+        <tr class="bg-gray-100">
+          <th>Title</th>
+          <th>Author</th>
+          <th>File Type</th>
+          <th>Upload Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let doc of documents"
+          (click)="handleDocumentClick(doc)"
+          class="cursor-pointer hover:bg-gray-50"
+        >
+          <td>{{ doc.title }}</td>
+          <td>{{ doc.author }}</td>
+          <td>{{ doc.fileType }}</td>
+          <td>{{ formatDate(doc.uploadDate) }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="documents.length === 0" class="text-gray-500">No documents found.</div>
+
+    <div *ngIf="totalElements > pageSize" class="flex justify-center items-center mt-4 gap-2">
+      <button (click)="handlePageChange(page - 1)" [disabled]="page === 0" class="border px-3 py-1">Previous</button>
+      <span class="text-sm text-gray-600">Page {{ page + 1 }} of {{ getPageCount() }}</span>
+      <button (click)="handlePageChange(page + 1)" [disabled]="page >= getPageCount() - 1" class="border px-3 py-1">
+        Next
+      </button>
+    </div>
+  </div>
+
+  <!-- Error Alert -->
+  <div *ngIf="error" class="bg-red-100 text-red-700 p-4 mt-4 rounded border border-red-300">
+    <strong>Error:</strong> {{ error }}
+  </div>
+
+  <!-- Dialog -->
+  <div *ngIf="selectedDocument" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white max-w-xl w-full p-6 rounded shadow-lg overflow-y-auto max-h-[90vh]">
+      <h3 class="text-xl font-semibold mb-2">{{ selectedDocument.title }}</h3>
+      <p><strong>Author:</strong> {{ selectedDocument.author }}</p>
+      <p><strong>File Type:</strong> {{ selectedDocument.fileType }}</p>
+      <p><strong>Upload Date:</strong> {{ formatDate(selectedDocument.uploadDate) }}</p>
+      <div *ngIf="selectedDocument.metadata">
+        <p class="mt-2"><strong>Metadata:</strong></p>
+        <ul class="list-disc pl-5">
+          <li *ngFor="let key of getObjectKeys(selectedDocument.metadata)">
+            <strong>{{ key }}:</strong> {{ selectedDocument.metadata[key] }}
+          </li>
+        </ul>
+      </div>
+      <div class="mt-4 prose max-h-60 overflow-y-auto" [innerHTML]="selectedDocument.content"></div>
+      <div class="mt-4 text-right">
+        <button (click)="selectedDocument = null" class="bg-gray-300 px-4 py-1 rounded">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,6 +2,7 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
 import {Router, UrlTree} from '@angular/router';
 import {AuthService} from '../auth.service';
+import { LocalService } from '../local.service';
 
 @Component({
   selector: 'login',
@@ -14,7 +15,7 @@ export class LoginComponent implements AfterViewInit, OnInit {
   successMessage: string = '';
 
   constructor(
-    private router: Router,private fb: FormBuilder, private authService: AuthService) {
+    private router: Router,private fb: FormBuilder, private authService: AuthService, private localService: LocalService) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
@@ -39,6 +40,7 @@ export class LoginComponent implements AfterViewInit, OnInit {
           this.successMessage = 'Login successful';
           this.errorMessage = '';
           // Handle successful login here
+          this.localService.saveData('authToken', response.token);
           this.router.navigate(['/home']);
           }
           else {

@@ -140,4 +140,19 @@ networks:
 
 ---
 
+## 🚀 CI/CD Pipeline with GitHub Actions
+
+This project uses **GitHub Actions** for Continuous Integration and Deployment (CI/CD). When changes are pushed to the `main` branch, a GitHub Actions workflow automatically builds the Docker image for the application and publishes it to **GitHub Container Registry (GHCR)**.
+
+### 🔄 How It Works
+- The workflow is triggered on every push to the `main` branch.
+- It logs into GHCR using a GitHub-provided token.
+- It builds the Docker image using the Dockerfile from the repository.
+- It tags the image with the repository and commit information.
+- It pushes the image to `ghcr.io/<your-github-username>/<repository-name>`.
+
+This automated pipeline ensures consistent builds and simplifies deployment using versioned container images directly from your GitHub repository.
+
+---
+
 

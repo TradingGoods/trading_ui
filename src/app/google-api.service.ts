@@ -30,7 +30,7 @@ export class GoogleApiService {
   private initialized = false;
 
   initializeAuth() {
-    if (this.initialized) return; // Prevent re-initialization
+    if (this.initialized) return;
 
     this.ensureGoogleLoaded(() => {
       google.accounts.id.initialize({
@@ -39,7 +39,7 @@ export class GoogleApiService {
       });
       console.log("Google initialized.");
       this.initialized = true;
-      this.renderButton('google-btn'); // Render button after initialization
+      this.renderButton('google-btn');
     });
   }
 
@@ -60,7 +60,7 @@ export class GoogleApiService {
 
   callbackHandle(response: any) {
     console.log('Google API response:', response);
-    this.authResponse.next(response); // Emit response to subscribers
+    this.authResponse.next(response);
   }
 
   private ensureGoogleLoaded(callback: () => void) {
@@ -72,19 +72,16 @@ export class GoogleApiService {
           clearInterval(interval);
           callback();
         }
-      }, 200); // Poll every 200ms for Google API
+      }, 200);
     }
   }
   logout() {
-    // Disable auto-select to ensure user is prompted to log in again on next session
     if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
       google.accounts.id.disableAutoSelect();
     }
   
-    // Clear the auth response observable
     this.authResponse.next(null);
   
-    // Optionally, clear other local storage/session storage data if you use any
     sessionStorage.removeItem('authToken');
     this.localService.clearData();
     console.log("User logged out.");
@@ -96,7 +93,6 @@ export class GoogleApiService {
     this.customHttpService.post('api/auth/google-login',response)
       .pipe(
         tap((backendResponse: any) => {
-          // Navigate to create account screen with backend response
           this.ngZone.run(() => {
             const encodedData = encodeURIComponent(JSON.stringify(backendResponse));
             this.router.navigate(['/create-account'], { queryParams: { data: encodedData } });
@@ -106,7 +102,6 @@ export class GoogleApiService {
       .subscribe({
         error: (err) => {
           console.error('Error verifying token:', err);
-          // Handle error (e.g., navigate to error screen or show error message)
         }
       });
   }

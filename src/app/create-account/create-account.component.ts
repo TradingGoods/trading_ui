@@ -44,8 +44,6 @@ export class CreateAccountComponent implements OnInit{
         lastName: lastName || '',
         email: this.receivedData.email || ''
       });
-
-      // Disable fields if data is provided
       if (firstName) {
         this.createAccountForm.get('firstName')?.setValue(firstName);
         this.createAccountForm.get('firstName')?.disable();
@@ -63,7 +61,6 @@ export class CreateAccountComponent implements OnInit{
   }
 
 
-  // Custom validator to check if passwords match
   passwordMatchValidator(formGroup: FormGroup) {
     const password = formGroup.get('password')?.value;
     const confirmPassword = formGroup.get('confirmPassword')?.value;

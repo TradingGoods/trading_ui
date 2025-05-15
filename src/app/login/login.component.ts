@@ -39,7 +39,6 @@ export class LoginComponent implements AfterViewInit, OnInit {
           console.log('Login successful', response);
           this.successMessage = 'Login successful';
           this.errorMessage = '';
-          // Handle successful login here
           this.localService.saveData('authToken', response.token);
           this.router.navigate(['/home']);
           }

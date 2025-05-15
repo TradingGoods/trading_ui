@@ -1,11 +1,10 @@
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { Subject } from 'rxjs/internal/Subject';
 import { Document } from './../model/Document'; // Adjust the import path as necessary
 import { CustomHttpService } from '../custom-http-service.service'; // Adjust the import path as necessary
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-document-management',
@@ -23,14 +22,14 @@ export class DocumentManagementComponent {
     authorFilter = '';
     fileTypeFilter = '';
     page = 0;
-    pageSize = 5; // Fixed page size for simplicity
+    pageSize = 5;
     totalElements = 0;
     selectedDocument: Document | null = null;
     uploadSuccess = false;
 
     private destroy$ = new Subject<void>();
 
-    constructor(private http: HttpClient, private fb: FormBuilder, private customHttpService: CustomHttpService) {
+    constructor(private fb: FormBuilder, private customHttpService: CustomHttpService) {
         this.ingestForm = this.fb.group({
             file: [null, Validators.required],
             author: [''],
@@ -47,7 +46,6 @@ export class DocumentManagementComponent {
         this.destroy$.complete();
     }
 
-    // Helper function to format date
     formatDate(dateString: string): string {
         try {
             const date = new Date(dateString);
@@ -63,7 +61,6 @@ export class DocumentManagementComponent {
         }
     }
 
-    // --- Document Ingestion ---
     handleFileChange(event: any): void {
         if (event.target.files && event.target.files[0]) {
             this.selectedFile = event.target.files[0];
@@ -96,16 +93,14 @@ export class DocumentManagementComponent {
         formData.append('file', this.ingestForm.get('file')?.value);
         formData.append('author', this.ingestForm.get('author')?.value || '');
         formData.append('documentType', this.ingestForm.get('documentType')?.value || '');
-
-        this.http.post<Document>(`${environment.apiBaseUrl}/documents/ingest`, formData)
-            .pipe(takeUntil(this.destroy$))
+        this.customHttpService.post<Document>(`/documents/ingest`, formData).pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (result) => {
                     console.log('Document uploaded successfully:', result);
                     this.uploadSuccess = true;
                     this.ingestForm.reset();
                     this.selectedFile = null;
-                    this.fetchDocuments(); // Refresh document list
+                    this.fetchDocuments();
                 },
                 error: (error: HttpErrorResponse) => {
                     this.error = error.error.message || 'Failed to upload document.';
@@ -116,12 +111,11 @@ export class DocumentManagementComponent {
             });
     }
 
-    // --- Q&A (Search) ---
+
     handleSearch(): void {
         this.loading = true;
         this.error = null;
-
-        this.http.get<Document[]>(`http://localhost:8080/api/documents/search?query=${this.searchTerm}`) // Replace
+        this.customHttpService.get<Document[]>(`/documents/search?query=${this.searchTerm}`)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (data) => {
@@ -138,7 +132,7 @@ export class DocumentManagementComponent {
             });
     }
 
-    // --- Document Selection (Filtering & Pagination) ---
+
     fetchDocuments(): void {
         this.loading = true;
         this.error = null;
@@ -153,8 +147,7 @@ export class DocumentManagementComponent {
         if (this.fileTypeFilter) {
             params = params.set('fileType', this.fileTypeFilter);
         }
-
-        this.http.get<any>('http://localhost:8080/api/documents/filter', { params }) // Adjust the endpoint
+        this.customHttpService.get<any>(`/documents/filter`, params)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (data) => {

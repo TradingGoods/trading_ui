@@ -12,7 +12,6 @@ export class CustomHttpInterceptor implements HttpInterceptor {
         const token = this.localStore.getData('authToken');
 
         if (!token) {
-            // Redirect only for protected routes
             if (!req.url.includes('/login')) {
             this.router.navigate(['/login']);
             }

@@ -2,7 +2,7 @@
 <div class="p-4 md:p-8">
   <h1 class="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-200">Document Management</h1>
 
-  <!-- Ingest Document -->
+
   <div class="mb-8 border rounded p-4">
     <h2 class="text-xl font-semibold mb-2">Ingest Document</h2>
     <p class="text-sm mb-4">Upload a document to the system.</p>
@@ -36,7 +36,7 @@
     </form>
   </div>
 
-  <!-- Search Documents -->
+
   <div class="mb-8 border rounded p-4">
     <h2 class="text-xl font-semibold mb-2">Search Documents</h2>
     <p class="text-sm mb-4">Search for documents by keyword.</p>
@@ -57,7 +57,7 @@
     </div>
   </div>
 
-  <!-- Document List -->
+
   <div class="border rounded p-4">
     <h2 class="text-xl font-semibold mb-2">Document List</h2>
     <p class="text-sm mb-4">Filter and view documents.</p>
@@ -101,12 +101,12 @@
     </div>
   </div>
 
-  <!-- Error Alert -->
+
   <div *ngIf="error" class="bg-red-100 text-red-700 p-4 mt-4 rounded border border-red-300">
     <strong>Error:</strong> {{ error }}
   </div>
 
-  <!-- Dialog -->
+
   <div *ngIf="selectedDocument" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-white max-w-xl w-full p-6 rounded shadow-lg overflow-y-auto max-h-[90vh]">
       <h3 class="text-xl font-semibold mb-2">{{ selectedDocument.title }}</h3>

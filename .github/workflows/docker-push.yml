@@ -3,9 +3,9 @@ name: Docker Push UI
 on:
   push:
     branches:
-      - main # Or your UI's main branch
+      - main
     paths:
-      - '**' # Only trigger if changes in the trading_ui directory
+      - '**'
 
 jobs:
   build-and-push:

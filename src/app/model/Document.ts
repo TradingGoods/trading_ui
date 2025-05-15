@@ -4,6 +4,6 @@ export interface Document {
     content: string;
     fileType: string;
     author: string;
-    uploadDate: string; // Store as string, format as needed
+    uploadDate: string;
     metadata: Record<string, string>;
 }

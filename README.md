@@ -1,27 +1,143 @@
-# Treading
+# 📄 Document Management Application – Setup Instructions
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.4.
+This guide provides step-by-step instructions to set up and run the **Document Management Application** using Docker Compose. The application includes:
 
-## Development server
+- **Frontend:** Angular  
+- **Backend:** Spring Boot
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+---
 
-## Code scaffolding
+## 🧰 Prerequisites
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Make sure the following tools are installed on your system:
 
-## Build
+- **[Docker](https://www.docker.com/get-started):** Required to run containers.
+- **Docker Compose:** Comes with Docker Desktop. If using Docker Engine, you may need to install it separately.
+- **[Git](https://git-scm.com/downloads):** Required to clone the repositories.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+---
 
-## Running unit tests
+## 📁 Directory Structure
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Ensure your project folder follows this structure:
 
-## Running end-to-end tests
+```
+<code_folder>
+├── trading_ui
+└── trading_backend
+    └── authorisation
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+---
 
-## Further help
+## 📥 Clone Repositories
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Open your terminal and run the following commands:
+
+```bash
+git clone https://github.com/TradingGoods/trading_ui.git
+# Folder structure: trading_ui
+
+git clone https://github.com/TradingGoods/tradingAuthorisation.git trading_backend/authorisation
+# Folder structure: trading_backend/authorisation
+```
+
+We clone the backend repo into a directory structure that matches the `docker-compose.yml`.
+
+---
+
+## 🚀 Build and Run with Docker Compose
+
+Navigate to the root folder (`<code_folder>`) containing both `trading_ui` and `trading_backend`, then run:
+
+```bash
+docker compose up --build -d
+```
+
+This command will:
+
+- `--build`: Build Docker images for frontend and backend.
+- `-d`: Run containers in detached mode (in the background).
+
+---
+
+## 🌐 Access the Application
+
+Once running, open your browser and go to:
+
+```
+http://localhost:8081
+```
+
+---
+
+## 👤 Create an Account
+
+Before logging in, register a new user account through the application's UI.
+
+---
+
+## 🔐 Login
+
+After registering, log in using your credentials.
+
+---
+
+## 🐳 Docker Compose File
+
+Below is the content of `docker-compose.yml`. Save this file in the `<code_folder>` directory.
+
+```yaml
+services:
+  database:
+    image: postgres:16
+    container_name: postgres-container-compose
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydb
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./trading_ui
+    container_name: trading-ui
+    ports:
+      - 8081:80
+    volumes:
+      - ./trading_ui:/app
+    networks:
+      - app-network
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./trading_backend/authorisation
+    container_name: trading-backend
+    ports:
+      - 8080:8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/mydb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    networks:
+      - app-network
+    depends_on:
+      - database
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
+```
+
+---
+
+

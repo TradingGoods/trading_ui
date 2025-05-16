@@ -77,7 +77,7 @@ export class CreateAccountComponent implements OnInit{
       formData.password = this.createAccountForm.controls['password'].value;
       formData.profile_pic_url = this.receivedData?.picture;
       console.log('Account Created:', formData);
-      this.customHttpService.post('api/auth/register',formData)
+      this.customHttpService.post('auth/register',formData)
       .pipe(
         tap((backendResponse: any) => {
           this.router.navigate(['/login']);

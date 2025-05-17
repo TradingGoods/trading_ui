@@ -26,12 +26,16 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and push frontend image
-        run: |
-          docker build -t $ECR_FRONTEND:latest
-          docker push $ECR_FRONTEND:latest
+      - name: Build and push Docker image (frontend)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ${{ env.ECR_REPO }}:latest
+          no-cache: true
 
-      - name: Update ECS frontend service
+      - name: Force ECS service to use new image (frontend)
         run: |
           aws ecs update-service \
             --cluster exchangify-cluster \

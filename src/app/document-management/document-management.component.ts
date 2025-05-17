@@ -93,7 +93,7 @@ export class DocumentManagementComponent {
         formData.append('file', this.ingestForm.get('file')?.value);
         formData.append('author', this.ingestForm.get('author')?.value || '');
         formData.append('documentType', this.ingestForm.get('documentType')?.value || '');
-        this.customHttpService.post<Document>(`/documents/ingest`, formData).pipe(takeUntil(this.destroy$))
+        this.customHttpService.post<Document>(`documents/ingest`, formData).pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (result) => {
                     console.log('Document uploaded successfully:', result);
@@ -115,7 +115,7 @@ export class DocumentManagementComponent {
     handleSearch(): void {
         this.loading = true;
         this.error = null;
-        this.customHttpService.get<Document[]>(`/documents/search?query=${this.searchTerm}`)
+        this.customHttpService.get<Document[]>(`documents/search?query=${this.searchTerm}`)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (data) => {
@@ -147,7 +147,7 @@ export class DocumentManagementComponent {
         if (this.fileTypeFilter) {
             params = params.set('fileType', this.fileTypeFilter);
         }
-        this.customHttpService.get<any>(`/documents/filter`, params)
+        this.customHttpService.get<any>(`documents/filter`, params)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (data) => {
